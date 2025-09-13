@@ -34,12 +34,6 @@ This platform allows **Applicants** to search and apply for jobs, while **Employ
 
 ---
 
-## 📸 Screenshots
-
-👉 *Add screenshots of your UI here later for better presentation.*
-
----
-
 ## 🚀 Getting Started
 
 ### 1️⃣ Clone the repository
