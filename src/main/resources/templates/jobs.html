@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Listings - Job Portal</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="/css/style.css" rel="stylesheet" />
+</head>
+<body>
+<div layout:fragment="content">
+
+    <!-- Page Header -->
+    <div class="card card-body mb-4">
+        <form th:action="@{/jobs}" method="get" class="row g-3 align-items-center">
+            <div class="col-md-6">
+                <input class="form-control" type="search" name="keyword" th:value="${keyword}" placeholder="Search by job title...">
+            </div>
+            <div class="col-md-4">
+                <input class="form-control" type="search" name="location" th:value="${location}" placeholder="Filter by location...">
+            </div>
+            <div class="col-md-2 d-grid">
+                <button class="btn btn-primary" type="submit">Search</button>
+            </div>
+        </form>
+    </div>
+
+
+    <!-- Success Message -->
+    <div th:if="${param.applied_success}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle-fill"></i> Application submitted successfully!
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    
+    <!-- Job Cards -->
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        <div class="col" th:each="job : ${jobs}">
+            <div class="card h-100 shadow-sm job-card border-0">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold text-dark" th:text="${job.title}">Job Title</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">
+                        <i class="bi bi-building"></i> <span th:text="${job.companyName}">Company</span>
+                    </h6>
+                    <p class="card-text mb-2">
+                        <small class="text-muted"><i class="bi bi-geo-alt-fill"></i> <span th:text="${job.location}">Location</span></small>
+                    </p>
+                    <p class="card-text" th:text="${#strings.abbreviate(job.description, 150)}">Description...</p>
+                </div>
+                <div class="card-footer bg-white border-0 d-flex justify-content-end">
+                    <form th:action="@{/apply/{jobId}(jobId=${job.id})}" method="post" sec:authorize="hasRole('ROLE_APPLICANT')">
+                        <button type="submit" class="btn btn-success btn-sm">
+                            <i class="bi bi-send"></i> Apply Now
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div th:if="${jobs.isEmpty()}" class="text-center mt-5">
+        <i class="bi bi-emoji-frown fs-1 text-muted"></i>
+        <h4 class="mt-2">No jobs found</h4>
+        <p class="text-muted">Try adjusting your search or check back later.</p>
+    </div>
+</div>
+</body>
+<footer th:replace="fragments/footer :: footer"></footer>
+</html>

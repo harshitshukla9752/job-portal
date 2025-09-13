@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Applications</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="/css/style.css" rel="stylesheet" />
+</head>
+<body>
+<body>
+<div layout:fragment="content">
+    <h2 class="mb-4">My Application History</h2>
+
+    <!-- Job apply karne ke baad success message -->
+    <div th:if="${param.applied_success}" class="alert alert-success">
+        Your application has been submitted successfully!
+    </div>
+    
+    <div th:if="${applications.isEmpty()}" class="alert alert-info">
+        You have not applied for any jobs yet.
+    </div>
+
+    <div th:unless="${applications.isEmpty()}" class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col">Job Title</th>
+                            <th scope="col">Company</th>
+                            <th scope="col">Date Applied</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="app : ${applications}">
+                            <td th:text="${app.job.title}">Senior Developer</td>
+                            <td th:text="${app.job.companyName}">Tech Corp</td>
+                            <td th:text="${#temporals.format(app.appliedAt, 'dd-MMM-yyyy HH:mm')}"></td>
+                            <td>
+                                <span class="badge"
+                                      th:classappend="${#strings.equals(app.status, 'Accepted')} ? 'bg-success' : (${#strings.equals(app.status, 'Rejected')} ? 'bg-danger' : 'bg-primary')"
+                                      th:text="${app.status}">
+                                    Applied
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
